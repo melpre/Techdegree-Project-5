@@ -45,17 +45,12 @@ fetchData("https://randomuser.me/api/?results=12")
 
     // Gallery Markup:
     function generateEmployeeCard(data) {
-        
-        //Create div containers for each employee card:
-        for (var i=0; i<data.length; i++) {
-            const divCard = document.createElement("div");
-            divCard[i].className = "card";
-            gallery.append(divCard[i]);
-        };
 
         //Loop through fetched data and populate employee card fields:
         data.forEach(item => {
-            item +=
+            let divCard = document.createElement("div");
+            divCard.className = "card";
+            let html = 
                 `<div class="card-img-container">
                         <img class="card-img" src="${item.picture.large}" alt="profile picture">
                     </div>
@@ -64,7 +59,8 @@ fetchData("https://randomuser.me/api/?results=12")
                         <p class="card-text">${item.email}</p>
                         <p class="card-text cap">${item.location.city}</p>
                 </div>`;
-            divCard.innerHTML += item;
+            divCard.innerHTML = html;
+            gallery.append(divCard);
 
             // Add click event listeners to each employee card:
             divCard.addEventListener("click", function(event) {
@@ -77,6 +73,19 @@ fetchData("https://randomuser.me/api/?results=12")
     // Modal Window Markup:
     function generateModalWindow(employeeDetail) {
         // Populate the specific user data on to HTML Markup Modal Window
+        let addressStNum = employeeDetail.location.street.number; 
+        let addressStName = employeeDetail.location.street.name;
+        let addressState = employeeDetail.location.state;
+        let addressPostCode = employeeDetail.location.postcode;
+        
+        //Converts 'dob' JSON object into a birthdate string:
+        function birthday(date) {
+            let jsonBirthday = new Date(date);
+            let stringBirthday = jsonBirthday.toString();
+            stringBirthday.slice(3, 14);
+            return stringBirthday;
+        };
+        
         const modal = `
         <div class="modal-container">
         <div class="modal">
@@ -88,29 +97,15 @@ fetchData("https://randomuser.me/api/?results=12")
                 <p class="modal-text cap">${employeeDetail.location.city}</p>
                 <hr>
                 <p class="modal-text">${employeeDetail.phone}</p>
-                <p class="modal-text">${employeeDetail.location}</p>
-                <p class="modal-text">Birthday: ${employeeDetail.dob.date}</p>
+                <p class="modal-text">${addressStNum} ${addressStName}, ${addressState} ${addressPostCode}</p>
+                <p class="modal-text">Birthday: ${birthday(employeeDetail.dob.date)}</p>
             </div>
         </div>
         `;
+
         body.innerHTML = modal;
     };
 
-
-
-
-///// EVENT LISTENERS /////
-
-// gallery.addEventListener("click", function(event) {
-//     event.preventDefault();
-
-//     if (event.target !== gallery) {
-        // Declare variable to hold 'closest' employee card
-//         let clicked = event.target.closest("div.card");
-
-//         generateModalWindow(clicked);
-//     };
-// });
 
 
 
