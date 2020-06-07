@@ -19,7 +19,7 @@ function fetchData(url) {
         .then(response => response.json())
 };
 
-fetchData("https://randomuser.me/api/?results=12")
+fetchData("https://randomuser.me/api/?results=12&nat=us")
     .then(data => {
         let employeeList = data.results;
         generateEmployeeCard(employeeList);
@@ -57,14 +57,13 @@ fetchData("https://randomuser.me/api/?results=12")
                     <div class="card-info-container">
                         <h3 id="name" class="card-name cap">${item.name.first} ${item.name.last}</h3>
                         <p class="card-text">${item.email}</p>
-                        <p class="card-text cap">${item.location.city}</p>
+                        <p class="card-text cap">${item.location.city}, ${item.location.state}</p>
                 </div>`;
             divCard.innerHTML = html;
             gallery.append(divCard);
 
-            // Add click event listeners to each employee card:
+            // Click event listeners to each employee card:
             divCard.addEventListener("click", function(event) {
-                event.preventDefault();
                 generateModalWindow(item);
             });
         });
@@ -72,38 +71,51 @@ fetchData("https://randomuser.me/api/?results=12")
 
     // Modal Window Markup:
     function generateModalWindow(employeeDetail) {
+
         // Populate the specific user data on to HTML Markup Modal Window
         let addressStNum = employeeDetail.location.street.number; 
         let addressStName = employeeDetail.location.street.name;
+        let addressCity = employeeDetail.location.city;
         let addressState = employeeDetail.location.state;
         let addressPostCode = employeeDetail.location.postcode;
         
-        //Converts 'dob' JSON object into a birthdate string:
+        // Convert 'dob' JSON object into a birthdate string:
         function birthday(date) {
             let jsonBirthday = new Date(date);
-            let stringBirthday = jsonBirthday.toString();
-            stringBirthday.slice(3, 14);
-            return stringBirthday;
+            let formattedBirthday = jsonBirthday.toLocaleDateString();
+            return formattedBirthday;
         };
+
+        // Create div with class "modal-container" hidden by default
+        let modalContainer = document.createElement("div");
+        modalContainer.className = "modal-container";
+        modalContainer.style.display = "none";
         
-        const modal = `
-        <div class="modal-container">
-        <div class="modal">
-            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-            <div class="modal-info-container">
-                <img class="modal-img" src="${employeeDetail.picture.large}" alt="profile picture">
-                <h3 id="name" class="modal-name cap">${employeeDetail.name.first} ${employeeDetail.name.last}</h3>
-                <p class="modal-text">${employeeDetail.email}</p>
-                <p class="modal-text cap">${employeeDetail.location.city}</p>
-                <hr>
-                <p class="modal-text">${employeeDetail.phone}</p>
-                <p class="modal-text">${addressStNum} ${addressStName}, ${addressState} ${addressPostCode}</p>
-                <p class="modal-text">Birthday: ${birthday(employeeDetail.dob.date)}</p>
+        let html = `
+            <div class="modal">
+                <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+                <div class="modal-info-container">
+                    <img class="modal-img" src="${employeeDetail.picture.large}" alt="profile picture">
+                    <h3 id="name" class="modal-name cap">${employeeDetail.name.first} ${employeeDetail.name.last}</h3>
+                    <p class="modal-text">${employeeDetail.email}</p>
+                    <p class="modal-text cap">${employeeDetail.location.city}</p>
+                    <hr>
+                    <p class="modal-text">${employeeDetail.phone}</p>
+                    <p class="modal-text">${addressStNum} ${addressStName}, ${addressCity}, ${addressState} ${addressPostCode}</p>
+                    <p class="modal-text">Birthday: ${birthday(employeeDetail.dob.date)}</p>
+                </div>
             </div>
-        </div>
         `;
 
-        body.innerHTML = modal;
+        modalContainer.innerHTML = html;
+        body.append(modalContainer);
+        modalContainer.style.display = "block";
+
+        // Click event listener on 'X' to close modal window
+        const button = document.querySelector("button");
+        button.addEventListener("click", function(event) {
+            modalContainer.style.display = "none";
+        });
     };
 
 
