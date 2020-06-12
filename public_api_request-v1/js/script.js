@@ -23,24 +23,58 @@ fetchData("https://randomuser.me/api/?results=12&nat=us")
     .then(data => {
         let employeeList = data.results;
         generateEmployeeCard(employeeList);
+        generateSearchBar(employeeList);
         console.log(employeeList);
     })
-    .then(generateSearchBar)
 
 
 
 ///// HELPER FUNCTIONS /////
 
     // Search Bar Markup:
-    function generateSearchBar() {
-        const search = `
-        <form action="#" method="get">
+    function generateSearchBar(data) {
+        const searchForm = document.createElement("form");
+        searchForm.action = "#";
+        searchForm.method = "get";
+        const searchBar = `
             <input type="search" id="search-input" class="search-input" placeholder="Search...">
             <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
-        </form>
         `;
+        searchContainer.append(searchForm);
+        searchForm.innerHTML = searchBar;
 
-        searchContainer.innerHTML = search;
+        // Variables to reference search elements
+        const search = document.getElementById("search-input");
+        const submit = document.getElementById("search-submit");
+
+        // Variable to hold HTML collection of employees:
+        let divs = document.getElementsByClassName("card");
+        let employeeNames = document.querySelectorAll("h3");
+
+        // Function to execute search:
+        function nameSearch (searchInput, cards, employees) {
+            for (let i=0; i<cards.length; i++) {
+                for (let x=0; x<employees.length; x++) {
+                    let nameTxt = employees[i].textContent || employees[i].innerHTML;
+                    if (nameTxt.toLowerCase().indexOf(searchInput.value) > -1) {
+                        cards[i].style.display = "block";
+                    } else {
+                        cards[i].style.display = "none";
+                    };
+                };
+            };
+        };
+
+        // Event listener for search submit button:
+        submit.addEventListener("click", (event) => {
+            nameSearch(search, divs, employeeNames);
+            event.preventDefault();
+        });
+
+        // Event listener for search input:
+        search.addEventListener("keyup", () => {
+            nameSearch(search, divs, employeeNames);
+        });
     };
 
     // Gallery Markup:
@@ -114,7 +148,7 @@ fetchData("https://randomuser.me/api/?results=12&nat=us")
         // Click event listener on 'X' to close modal window
         const button = document.querySelector("button");
         button.addEventListener("click", function(event) {
-            modalContainer.style.display = "none";
+            modalContainer.remove();
         });
     };
 
