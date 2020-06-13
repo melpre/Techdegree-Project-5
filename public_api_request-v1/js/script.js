@@ -3,6 +3,12 @@
  * script.js */
 
 
+/* Extra Credit Tasks:
+1. Lines 57-89 Search bar function
+2. Lines 162-219 Toggle "previous" & "next" buttons in modal window
+3. Style changes (background and box shadows) made in styles.css file
+*/
+
 
 
 ///// GLOBAL VARIABLES /////
@@ -11,7 +17,6 @@
 const searchContainer = document.querySelector(".search-container");
 const gallery = document.querySelector("#gallery");
 const body = document.querySelector("body");
-
 
 // Data
 let employeeList;
@@ -37,7 +42,6 @@ fetchData("https://randomuser.me/api/?results=12&nat=us")
 
 ///// HELPER FUNCTIONS /////
 
-
     // Search Bar Markup:
     function generateSearchBar(data) {
         // Build search bar elements
@@ -51,6 +55,7 @@ fetchData("https://randomuser.me/api/?results=12&nat=us")
         searchContainer.append(searchForm);
         searchForm.innerHTML = searchBar;
 
+        // EXTRA CREDIT:
         // Variables to reference search elements
         const search = document.getElementById("search-input");
         const submit = document.getElementById("search-submit");
@@ -153,6 +158,7 @@ fetchData("https://randomuser.me/api/?results=12&nat=us")
             modalContainer.innerHTML = html;
             body.append(modalContainer);
 
+            // EXTRA CREDIT:
             // Create div for modal toggle buttons
             const modalToggle = document.createElement("div");
             modalToggle.className = "modal-btn-container";
@@ -183,7 +189,7 @@ fetchData("https://randomuser.me/api/?results=12&nat=us")
             prev.addEventListener("click", function(event) {
                 event.preventDefault();
                 // Declare variables to reference current employee detail in modal window and previous employee detail in array
-                let currentIndex = employees.indexOf(employeeDetail);
+                let currentIndex = employees.indexOf(detail);
                 let previous = employees[currentIndex - 1];
                 let previousIndex = employees.indexOf(previous);
                 // Remove current modal window that is open
@@ -200,7 +206,7 @@ fetchData("https://randomuser.me/api/?results=12&nat=us")
             next.addEventListener("click", function(event) {
                 event.preventDefault();
                 // Declare variables to reference current employee detail in modal window and previous employee detail in array
-                let currentIndex = employees.indexOf(employeeDetail);
+                let currentIndex = employees.indexOf(detail);
                 let next = employees[currentIndex + 1];
                 let nextIndex = employees.indexOf(employees[currentIndex + 1])
                 // Remove current modal window that is open
@@ -211,20 +217,14 @@ fetchData("https://randomuser.me/api/?results=12&nat=us")
                 } else {
                     body.append(modal);
                 };
-            });  
+            });
         };
 
+        // Callback function
         createModal(employeeDetail);
     };
 
-    
 
 
-
-
-
-
-
-
-
-
+// Extra Credit //
+///// STYLE CHANGES ---> see styles.css /////
