@@ -65,29 +65,38 @@ fetchData("https://randomuser.me/api/?results=12&nat=us")
         let employeeNames = document.querySelectorAll("h3");
 
         // Function to execute search (source: https://www.w3schools.com/howto/howto_js_filter_lists.asp)
-        function nameSearch (searchInput, cards, employees) {
+        function nameSearch (searchInput, cards, names, data) {
             for (let i=0; i<cards.length; i++) {
-                for (let x=0; x<employees.length; x++) {
-                    let nameTxt = employees[i].textContent || employees[i].innerHTML;
-                    if (nameTxt.toLowerCase().indexOf(searchInput.value) > -1) {
-                        cards[i].style.display = "";
-                    } else {
-                        cards[i].style.display = "none";
-                    };
-                };
-            };
+                let nameTxt = names[i].textContent || names[i].innerHTML;
+                if (nameTxt.toLowerCase().indexOf(searchInput.value) > -1) {
+                    cards[i].style.display = "";
+
+                    
+                    // Filter employee data for employees that are displayed as search results
+                    let displayed = data.filter(item => {
+                        if (item.name.first.toLowerCase() || item.name.last.toLowerCase().includes(searchInput.value.toLowerCase())) {
+                            return item;
+                        };
+                    });
+
+
+                    console.log(displayed);
+                } else {
+                    cards[i].style.display = "none";
+                };        
+            };         
         };
 
         // Event listener for search submit button:
         submit.addEventListener("click", (event) => {
             event.preventDefault();
-            nameSearch(search, divs, employeeNames);
+            nameSearch(search, divs, employeeNames, employeeList);
         });
 
         // Event listener for search input:
         search.addEventListener("keyup", (event) => {
             event.preventDefault();
-            nameSearch(search, divs, employeeNames);
+            nameSearch(search, divs, employeeNames, employeeList);
         });
     };
 
