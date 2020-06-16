@@ -16,7 +16,7 @@ html, body {
 body {
     font-family: "Nunito", sans-serif;
     text-align: center;
-    background-color: #FFFFE0; /*changed*/
+    background-color: #FFFFE0; /*changed* source: https://leaverou.github.io/css3patterns/#lined-paper */ 
     background-image: /*changed*/
         linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
         linear-gradient(#eee .1em, transparent .1em);
